@@ -13,6 +13,11 @@ const router = createRouter({
       path: '/flashcard/:id?',
       name: 'flashcard',
       component: () => import('../views/FlashcardView.vue')
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('../views/SearchView.vue')
     }
   ]
 })

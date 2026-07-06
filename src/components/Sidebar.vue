@@ -26,21 +26,35 @@
         <Plus class="w-[18px] h-[18px]" />
         <span :class="[!isSidebarOpen && 'hidden', 'sm:block']">Tạo bài học mới</span>
       </button>
+
+      <button 
+        @click="$router.push('/search')"
+        class="flex items-center gap-2 bg-[#1a1a1c] hover:bg-[#282a2c] text-sm font-medium py-2.5 px-4 rounded-full border border-gray-700 transition-colors w-max mt-3"
+      >
+        <Search class="w-[18px] h-[18px]" />
+        <span :class="[!isSidebarOpen && 'hidden', 'sm:block']">Tra từ</span>
+      </button>
     </div>
 
     <!-- Recent History -->
     <div :class="['flex-1 overflow-y-auto mt-6 px-3', !isSidebarOpen && 'hidden', 'sm:block']">
       <div class="text-xs font-semibold text-gray-500 mb-3 px-2">Gần đây</div>
       <div class="space-y-1">
-        <button 
-          v-for="set in recentSets" 
+        <button
+          v-for="set in recentSets"
           :key="set.id"
           @click="goToDeck(set.id)"
-          class="w-full flex items-center gap-3 px-2 py-2.5 hover:bg-[#282a2c] rounded-lg transition-colors group text-left text-sm"
+          :class="[
+            'w-full flex items-center gap-3 px-2 py-2.5 rounded-lg transition-colors group text-left text-sm',
+            isActive(set.id) ? 'bg-[#282a2c] text-white' : 'hover:bg-[#282a2c] text-gray-300'
+          ]"
         >
-          <MessageSquare class="text-gray-400 shrink-0 w-4 h-4" />
-          <span class="truncate flex-1 text-gray-300">{{ set.title }}</span>
-          <History v-if="set.pinned" class="text-gray-500 opacity-0 group-hover:opacity-100 w-3.5 h-3.5" />
+          <MessageSquare :class="[isActive(set.id) ? 'text-white' : 'text-gray-400', 'shrink-0 w-4 h-4']" />
+          <span :class="['truncate flex-1', isActive(set.id) ? 'text-white' : 'text-gray-300']">{{ set.title }}</span>
+          <History
+            v-if="set.pinned || isActive(set.id)"
+            :class="[(isActive(set.id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'), 'text-gray-500 w-3.5 h-3.5']"
+          />
         </button>
       </div>
       <button class="w-full flex items-center gap-3 px-2 py-2.5 hover:bg-[#282a2c] rounded-lg transition-colors text-left text-sm text-gray-500 mt-2">
@@ -70,10 +84,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { 
-  Menu as MenuIcon, Sparkles, Plus, MessageSquare, History, ChevronRight, Settings 
+  Menu as MenuIcon, Sparkles, Plus, MessageSquare, History, ChevronRight, Settings, Search 
 } from 'lucide-vue-next';
 import deckService from '@/services/deck.service';
 
@@ -87,7 +101,13 @@ defineProps({
 defineEmits(['toggle']);
 
 const router = useRouter();
+const route = useRoute();
 const recentSets = ref([]);
+
+const isActive = (id) => {
+  const paramId = route.params && route.params.id ? String(route.params.id) : null;
+  return paramId === String(id) || route.path === `/flashcard/${id}`;
+};
 
 const fetchDecks = async () => {
   try {
