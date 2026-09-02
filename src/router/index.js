@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import('../views/FlashcardView.vue')
     },
     {
+      path: '/typing/:id?',
+      name: 'typing',
+      component: () => import('../views/TypingView.vue')
+    },
+    {
       path: '/search',
       name: 'search',
       component: () => import('../views/SearchView.vue')

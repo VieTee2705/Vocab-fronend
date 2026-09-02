@@ -22,7 +22,7 @@
         <button 
           v-for="(item, index) in suggestions" 
           :key="index"
-          @click="$router.push('/flashcard/1')"
+          @click="$router.push(item.route)"
           class="flex flex-col items-start p-4 rounded-2xl bg-[#1e1f20] hover:bg-[#282a2c] border border-gray-800 transition-all text-left group h-28"
         >
           <div class="mb-auto p-2 bg-[#131314] rounded-full group-hover:scale-110 transition-transform">
@@ -83,9 +83,9 @@ const router = useRouter();
 const inputValue = ref('');
 
 const suggestions = [
-  { icon: BookOpen, colorClass: 'text-blue-400', text: 'Ôn tập Flashcard: TOEIC Mục tiêu 700+' },
-  { icon: BrainCircuit, colorClass: 'text-purple-400', text: 'Làm bài Quiz kiểm tra trí nhớ' },
-  { icon: Sparkles, colorClass: 'text-yellow-400', text: 'Tạo bộ từ vựng mới về "Du lịch"' },
+  { icon: BookOpen, colorClass: 'text-blue-400', text: 'Ôn tập Flashcard: TOEIC Mục tiêu 700+', route: '/flashcard/1' },
+  { icon: BrainCircuit, colorClass: 'text-purple-400', text: 'Luyện gõ từ vựng (Tiếng Anh & Việt)', route: '/typing/1' },
+  { icon: Sparkles, colorClass: 'text-yellow-400', text: 'Tạo bộ từ vựng mới về "Du lịch"', route: '/flashcard/1' },
 ];
 
 const handleSearch = () => {
